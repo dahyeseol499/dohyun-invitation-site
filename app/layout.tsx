@@ -13,8 +13,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         {children}
         <Script
-          src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=rv9q6yt1sb"
-          strategy="beforeInteractive"
+        src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=rv9q6yt1sb"
+        strategy="afterInteractive"
         />
       </body>
     </html>

@@ -22,7 +22,7 @@ img { display: block; }
 .short-rule { width: 54px; height: 1px; margin-bottom: 60px; background: var(--ink); opacity: .52; }
 .hero-note { margin: 0; font-size: 20px; font-weight: 700; line-height: 1.5; letter-spacing: .05em; text-align: center; }
 
-.message-section { padding: 90px 28px 90px; background: var(--mist); text-align: center; }
+.message-section { padding: 90px 28px 0; background: var(--mist); text-align: center; }
 .ribbon-wrap { display: flex; justify-content: center; margin-bottom: 20px; }
 .ribbon-img { width: auto; height: 38px; object-fit: contain; }
 .message-section h2 { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: 0.08em; }
@@ -31,7 +31,7 @@ img { display: block; }
 .message-copy p { margin: 0 0 27px; }
 .message-copy p:last-child { margin-bottom: 0; }
 
-.parents-info { margin: 40px 0 0; font-family: "Gowun Batang", serif; font-size: 16px; font-weight: 400; line-height: 1.5; letter-spacing: 0.08em; text-align: center; }
+.parents-info { margin: 40px 0 120px; font-family: "Gowun Batang", serif; font-size: 16px; font-weight: 400; line-height: 1.5; letter-spacing: 0.08em; text-align: center; }
 
 .photo-section { padding: 0; background: #fff; }
 .wide-photo-wrap { width: 100%; overflow: hidden; }
