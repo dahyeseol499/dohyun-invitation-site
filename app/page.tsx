@@ -97,7 +97,7 @@ export default function Home() {
           </div>
           <p className="script-name">Dohyun</p>
           <span className="short-rule" aria-hidden="true" />
-          <p className="hero-note">2026년 9월 5일 토요일 12시<br />아산 가든블룸</p>
+          <p className="hero-note">2026년 9월 5일 토요일 11시 30분<br />아산 가든블룸</p>
         </section>
 
         <section className="message-section">
@@ -110,7 +110,7 @@ export default function Home() {
             <p>지난 일 년 동안 따뜻한 사랑과 관심을 보내주신 분들과<br />첫 번째 생일의 기쁨을 함께 나누고자<br />작은 자리를 마련했습니다.</p>
             <p>바쁘시겠지만 소중한 걸음으로 함께하시어<br />도현이의 첫 생일을 따뜻하게 축복해 주시면 감사하겠습니다.</p>
           </div>
-          <p className="parents-info">아빠 차OO &nbsp;|&nbsp; 엄마 주현선</p>
+          <p className="parents-info">아빠 차지훈&nbsp;|&nbsp; 엄마 주현선</p>
         </section>
 
         <section className="photo-section" aria-label="가족 사진">
