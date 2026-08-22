@@ -13,7 +13,7 @@ export default function Home() {
           <div className="portrait-wrap">
             <Image className="portrait" src="/dohyeon.png" alt="한복을 입은 도현이" width={420} height={420} priority />
           </div>
-          <p className="script-name">Dohyeon</p>
+          <p className="script-name">Dohyun</p>
           <span className="short-rule" aria-hidden="true" />
           <p className="hero-note">2026년 9월 5일 토요일 12시<br />아산 가든블룸</p>
         </section>
@@ -48,7 +48,7 @@ export default function Home() {
           <p>저 멀리, 계절의 끝에서 작은 숨결 하나가<br />우리에게 와 도현이라는 이름이 되었습니다.</p>
           <p>작고 따뜻한 손을 잡고 걷는 하루하루가<br />우리에게는 처음 만나는 빛이었습니다.</p>
           <p>도현이가 처음 맞는 생일,<br />소중한 분들과 그 기쁨을 나누고 싶습니다.</p>
-          <span className="letter-sign">With love, for Dohyeon</span>
+          <span className="letter-sign">With love, for Dohyun</span>
         </section>
       </article>
     </main>
