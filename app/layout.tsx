@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -7,5 +8,15 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="ko"><body>{children}</body></html>;
+  return (
+    <html lang="ko">
+      <body>
+        {children}
+        <Script
+          src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=rv9q6yt1sb"
+          strategy="beforeInteractive"
+        />
+      </body>
+    </html>
+  );
 }

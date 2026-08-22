@@ -1,6 +1,51 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
+declare global {
+  interface Window {
+    naver: any;
+  }
+}
+
 export default function Home() {
+  const [mapLoaded, setMapLoaded] = useState(false);
+
+  useEffect(() => {
+    const checkNaverMap = setInterval(() => {
+      if (window.naver && window.naver.maps) {
+        setMapLoaded(true);
+        clearInterval(checkNaverMap);
+      }
+    }, 100);
+
+    return () => clearInterval(checkNaverMap);
+  }, []);
+
+  useEffect(() => {
+    if (!mapLoaded) return;
+
+    // 아산 가든블룸 위치 좌표
+    const location = new window.naver.maps.LatLng(36.9158102, 127.0285499);
+
+    const mapOptions = {
+      center: location,
+      zoom: 16,
+      zoomControl: false,
+      scaleControl: false,
+      mapDataControl: false,
+    };
+
+    const map = new window.naver.maps.Map('map', mapOptions);
+
+    new window.naver.maps.Marker({
+      position: location,
+      map: map,
+      title: '가든블룸',
+    });
+  }, [mapLoaded]);
+
   return (
     <main className="page-shell">
       <article className="invitation">
@@ -19,29 +64,31 @@ export default function Home() {
         </section>
 
         <section className="message-section">
-          <div className="ribbon" aria-hidden="true">⌁</div>
+          <div className="ribbon-wrap">
+            <Image src="/Ribbon.svg" alt="리본 아이콘" width={42} height={36} className="ribbon-img" priority />
+          </div>
           <h2>초대합니다</h2>
           <div className="message-copy">
             <p>여름 끝자락에 태어난 도현이가<br />네 번의 계절을 지나 다시 여름의 끝자락을 맞았습니다.</p>
             <p>지난 일 년 동안 따뜻한 사랑과 관심을 보내주신 분들과<br />첫 번째 생일의 기쁨을 함께 나누고자<br />작은 자리를 마련했습니다.</p>
             <p>바쁘시겠지만 소중한 걸음으로 함께하시어<br />도현이의 첫 생일을 따뜻하게 축복해 주시면 감사하겠습니다.</p>
           </div>
+          <p className="parents-info">아빠 차OO &nbsp;|&nbsp; 엄마 주현선</p>
         </section>
 
-        <section className="photo-section" aria-label="도현이 사진">
+        <section className="photo-section" aria-label="가족 사진">
           <div className="wide-photo-wrap">
-            <Image className="wide-photo" src="/dohyeon.png" alt="한복을 입고 앉아 있는 도현이" width={1600} height={1067} />
+            <Image className="wide-photo" src="/Family.png" alt="도현이네 가족 사진" width={1600} height={1067} priority />
           </div>
         </section>
 
         <section className="event-section">
-          <p className="section-kicker">돌잔치 안내</p>
-          <h2>도현이의 첫 생일</h2>
-          <p className="pending-detail">2026년 9월 5일 토요일 12시<br />아산 가든블룸</p>
-          <div className="directions">
-            <p className="section-kicker">오시는 길</p>
-            <div className="map-placeholder"><span>아산 가든블룸</span></div>
-          </div>
+          <h2>오시는 길</h2>
+          <p className="address-text">
+            충남 아산시 둔포면 충무로 1222-10<br />
+            가든블룸
+          </p>
+          <div id="map" className="naver-map"></div>
         </section>
 
         <section className="letter-section">
