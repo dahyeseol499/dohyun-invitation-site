@@ -13,7 +13,7 @@ img { display: block; }
 .invitation { width: min(100%, 430px); margin: 0 auto; overflow: hidden; background: var(--paper); box-shadow: 0 0 32px rgb(37 60 116 / 8%); }
 
 .hero { display: flex; min-height: 760px; padding: 58px 26px 52px; align-items: center; flex-direction: column; text-align: center; }
-.script-title { display: flex; margin: 0 0 28px; color: var(--ink); font-family: "Tirelessly Love You", cursive; font-size: clamp(4.4rem, 22vw, 6.4rem); font-weight: 400; line-height: .62; letter-spacing: -.02em; flex-direction: column; transform: rotate(-2deg); }
+.script-title { display: flex; margin: 0 0 28px; color: var(--ink); font-family: "Tirelessly Love You", cursive; font-size: 80px; font-weight: 400; font-synthesis: none; line-height: .92; letter-spacing: -.02em; flex-direction: column; text-rendering: geometricPrecision; transform: rotate(-2deg); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 .script-title span:nth-child(2) { margin-left: 12px; }
 .script-title span:nth-child(3) { margin-left: -6px; }
 .portrait-wrap { width: 190px; height: 190px; overflow: hidden; border-radius: 50%; background: #dce7f8; }
@@ -43,5 +43,5 @@ img { display: block; }
 .letter-section p { margin: 0 0 30px; }
 .letter-sign { display: block; margin-top: 48px; color: var(--ink); font-family: "Tirelessly Love You", cursive; font-size: 1.75rem; }
 
-@media (max-width: 370px) { .hero { min-height: 700px; } .script-title { font-size: 3.2rem; } .portrait-wrap { width: 170px; height: 170px; } .message-copy, .letter-section { font-size: .69rem; } }
+@media (max-width: 370px) { .hero { min-height: 700px; } .portrait-wrap { width: 170px; height: 170px; } .message-copy, .letter-section { font-size: .69rem; } }
 @media (min-width: 431px) { .page-shell { padding: 28px 0; } .invitation { border-radius: 20px; } }
