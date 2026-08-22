@@ -15,7 +15,7 @@ export default function Home() {
           </div>
           <p className="script-name">Dohyeon</p>
           <span className="short-rule" aria-hidden="true" />
-          <p className="hero-note">도현이의 첫 번째 생일에<br />초대합니다</p>
+          <p className="hero-note">2026년 9월 5일 토요일 12시<br />아산 가든블룸</p>
         </section>
 
         <section className="message-section">
@@ -37,10 +37,10 @@ export default function Home() {
         <section className="event-section">
           <p className="section-kicker">돌잔치 안내</p>
           <h2>도현이의 첫 생일</h2>
-          <p className="pending-detail">일시와 장소는 곧 알려드릴게요.</p>
+          <p className="pending-detail">2026년 9월 5일 토요일 12시<br />아산 가든블룸</p>
           <div className="directions">
             <p className="section-kicker">오시는 길</p>
-            <div className="map-placeholder"><span>장소를 알려주세요</span></div>
+            <div className="map-placeholder"><span>아산 가든블룸</span></div>
           </div>
         </section>
 
