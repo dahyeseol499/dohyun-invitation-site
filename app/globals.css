@@ -22,7 +22,8 @@ img { display: block; }
 .short-rule { width: 54px; height: 1px; margin-bottom: 60px; background: var(--ink); opacity: .52; }
 .hero-note { margin: 0; font-size: 20px; font-weight: 700; line-height: 1.5; letter-spacing: .05em; text-align: center; }
 
-.message-section { padding: 90px 28px 0; background: var(--mist); text-align: center; }
+/* 초대합니다 섹션: 아래쪽까지 배경색이 꽉 차도록 패딩 조정 */
+.message-section { padding: 90px 28px 80px; background: var(--mist); text-align: center; }
 .ribbon-wrap { display: flex; justify-content: center; margin-bottom: 20px; }
 .ribbon-img { width: auto; height: 38px; object-fit: contain; }
 .message-section h2 { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: 0.08em; }
@@ -31,11 +32,11 @@ img { display: block; }
 .message-copy p { margin: 0 0 27px; }
 .message-copy p:last-child { margin-bottom: 0; }
 
-.parents-info { margin: 40px 0 120px; font-family: "Gowun Batang", serif; font-size: 16px; font-weight: 400; line-height: 1.5; letter-spacing: 0.08em; text-align: center; }
+.parents-info { margin: 40px 0 0; font-family: "Gowun Batang", serif; font-size: 16px; font-weight: 400; line-height: 1.5; letter-spacing: 0.08em; text-align: center; }
 
-.photo-section { padding: 0; background: #fff; }
-.wide-photo-wrap { width: 100%; overflow: hidden; }
-.wide-photo { width: 100%; height: auto; object-fit: cover; }
+.photo-section { padding: 0; background: var(--mist); } /* 사진 섹션 배경도 연한 하늘색으로 맞춰서 빈틈 없애기 */
+.wide-photo-wrap { width: 100%; overflow: hidden; padding: 0 28px; } /* 사진 양옆에 여백을 주어 안쪽으로 쏙 들어가게 함 */
+.wide-photo { width: 100%; height: auto; object-fit: cover; border-radius: 16px; } /* 사진 모서리를 둥글게 처리하여 깔끔하게 만듦 */
 
 .event-section { min-height: 900px; padding: 80px 34px 120px; text-align: center; }
 .section-kicker { margin: 0 0 18px; font-size: .78rem; letter-spacing: .1em; }
