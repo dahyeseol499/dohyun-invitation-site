@@ -26,7 +26,7 @@ img { display: block; }
 .ribbon-wrap { display: flex; justify-content: center; margin-bottom: 20px; }
 .ribbon-img { width: auto; height: 38px; object-fit: contain; }
 .message-section h2 { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: 0.08em; }
-.event-section h2 { margin: 0; font-size: 1.05rem; font-weight: 700; letter-spacing: .04em; }
+.event-section h2 { margin: 0 0 30px; font-size: 1.05rem; font-weight: 700; letter-spacing: .04em; }
 .message-copy { margin-top: 40px; font-size: 16px; line-height: 1.6; word-break: keep-all; }
 .message-copy p { margin: 0 0 27px; }
 .message-copy p:last-child { margin-bottom: 0; }
@@ -54,7 +54,7 @@ img { display: block; }
 }
 
 .address-text {
-  margin-top: 16px;
+  margin-top: 0;
   font-size: 0.95rem;
   line-height: 1.6;
 }
