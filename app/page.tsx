@@ -11,7 +11,7 @@ export default function Home() {
             <span>Birthday</span>
           </h1>
           <div className="portrait-wrap">
-            <Image className="portrait" src="/dohyeon.png" alt="한복을 입은 도현이" width={420} height={420} priority />
+            <Image className="portrait" src="/dohyun-portrait.png" alt="한복을 입은 도현이" width={480} height={480} priority unoptimized />
           </div>
           <p className="script-name">Dohyun</p>
           <span className="short-rule" aria-hidden="true" />
