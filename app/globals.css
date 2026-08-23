@@ -39,7 +39,11 @@ img { display: block; }
 .wide-photo-wrap { width: 100%; overflow: hidden; background: var(--mist); }
 .wide-photo { width: 100%; height: auto; object-fit: cover; }
 
-.event-section { min-height: 900px; padding: 80px 34px 120px; text-align: center; }
+.event-section {
+  padding: 80px 34px 40px; /* 기존 80px 34px 120px에서 아래 패딩을 40px로 축소 */
+  text-align: center;
+}
+
 .section-kicker { margin: 0 0 18px; font-size: .78rem; letter-spacing: .1em; }
 .pending-detail { margin: 22px 0 0; font-size: .76rem; line-height: 1.8; }
 .directions { margin-top: 102px; }
@@ -95,7 +99,7 @@ img { display: block; }
 
 /* 갤러리 섹션 스타일 */
 .gallery-section {
-  padding: 80px 28px;
+  padding: 120px 28px;
   background: var(--paper);
   text-align: center;
 }
@@ -189,9 +193,57 @@ img { display: block; }
   right: 10px;
 }
 
+/* 공유 섹션 스타일 */
+.share-section {
+  padding: 80px 28px 60px; /* 위쪽 패딩을 20px로 조정 */
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.share-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 16px 24px;
+  border-radius: 16px;
+  border: none;
+  font-family: "Gowun Batang", serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.share-btn:active {
+  transform: scale(0.99);
+}
+
+/* 카카오톡 전하기: 파스텔 노란빛으로 포인트 */
+.share-btn.kakao-btn {
+  background-color: #FEE500;
+  color: #191919;
+}
+
+/* 주소 복사하기: 은은한 미스트/네이비 톤 */
+.share-btn.copy-btn {
+  background-color: var(--mist);
+  color: var(--ink);
+}
+
+.share-icon {
+  width: 20px;
+  height: 20px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .letter-section { padding: 82px 45px 100px; background: var(--mist); color: #26324b; font-size: .75rem; line-height: 1.6; word-break: keep-all; }
 .letter-section p { margin: 0 0 30px; }
 .letter-sign { display: block; margin-top: 48px; color: var(--ink); font-family: "Tirelessly Love You", cursive; font-size: 1.75rem; }
+
 
 @media (max-width: 370px) { .message-copy, .letter-section { font-size: 15px; } }
 @media (min-width: 501px) { .page-shell { padding: 28px 0; } .invitation { border-radius: 20px; } }

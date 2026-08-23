@@ -6,10 +6,11 @@ import Image from 'next/image';
 declare global {
   interface Window {
     naver: any;
+    Kakao: any; // 👈 Kakao 타입 추가
   }
 }
 
-// 갤러리 이미지 목록 (public/gallery/ 폴더 안의 이미지 경로)
+// 총 13개 이미지 경로 (맨 앞에 / 추가)
 const galleryImages = [
   '/gallery/Dohyun-1.jpeg',
   '/gallery/Dohyun-2.jpeg',
@@ -20,12 +21,48 @@ const galleryImages = [
   '/gallery/Dohyun-7.jpeg',
   '/gallery/Dohyun-8.jpeg',
   '/gallery/Dohyun-9.jpeg',
+  '/gallery/Dohyun-10.jpeg',
+  '/gallery/Dohyun-11.jpeg',
+  '/gallery/Dohyun-12.jpeg',
+  '/gallery/Dohyun-13.jpeg',
 ];
 
 export default function Home() {
   const mapElement = useRef<HTMLDivElement>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+  // 스와이프 터치 위치 저장을 위한 State
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  // 주소 복사 기능 함수
+  const handleCopyLink = () => {
+    if (typeof window !== 'undefined') {
+      navigator.clipboard.writeText(window.location.href);
+      alert('초대장 주소가 복사되었습니다.');
+    }
+  };
+
+  // 카카오톡 공유 기능 함수
+  const KAKAO_JAVASCRIPT_KEY = '967fd25acd99fdd3bded0bef01106fc0';
+  const KAKAO_TEMPLATE_ID = 136469;
+
+  const handleShareKakao = () => {
+    if (typeof window === 'undefined') return;
+
+    const { Kakao } = window;
+
+    if (Kakao) {
+      if (!Kakao.isInitialized()) {
+        Kakao.init(KAKAO_JAVASCRIPT_KEY);
+      }
+
+      Kakao.Share.sendCustom({
+        templateId: KAKAO_TEMPLATE_ID,
+      });
+    }
+  };
 
   useEffect(() => {
     const checkNaverMap = setInterval(() => {
@@ -67,19 +104,46 @@ export default function Home() {
     window.naver.maps.Event.addListener(map, 'click', openNaverMap);
   }, [mapLoaded]);
 
-  // 갤러리 모달 제어 함수
+  // 갤러리 모달 제어
   const openModal = (index: number) => setSelectedIndex(index);
   const closeModal = () => setSelectedIndex(null);
-  const prevImage = (e: React.MouseEvent) => {
-    e.stopPropagation();
+
+  const prevImage = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
     if (selectedIndex !== null) {
       setSelectedIndex((prev) => (prev === 0 ? galleryImages.length - 1 : (prev as number) - 1));
     }
   };
-  const nextImage = (e: React.MouseEvent) => {
-    e.stopPropagation();
+
+  const nextImage = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
     if (selectedIndex !== null) {
       setSelectedIndex((prev) => (prev === galleryImages.length - 1 ? 0 : (prev as number) + 1));
+    }
+  };
+
+  // 모바일 스와이프 감지 로직 (50px 이상 이동 시 동작)
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      nextImage();
+    } else if (isRightSwipe) {
+      prevImage();
     }
   };
 
@@ -110,7 +174,7 @@ export default function Home() {
             <p>지난 일 년 동안 따뜻한 사랑과 관심을 보내주신 분들과<br />첫 번째 생일의 기쁨을 함께 나누고자<br />작은 자리를 마련했습니다.</p>
             <p>바쁘시겠지만 소중한 걸음으로 함께하시어<br />도현이의 첫 생일을 따뜻하게 축복해 주시면 감사하겠습니다.</p>
           </div>
-          <p className="parents-info">아빠 차지훈&nbsp;|&nbsp; 엄마 주현선</p>
+          <p className="parents-info">아빠 차지훈 &nbsp;|&nbsp; 엄마 주현선</p>
         </section>
 
         <section className="photo-section" aria-label="가족 사진">
@@ -119,11 +183,11 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 갤러리 섹션 */}
+        {/* 갤러리 섹션: 썸네일은 상위 9개만 표시 */}
         <section className="gallery-section">
           <h2>갤러리</h2>
           <div className="gallery-grid">
-            {galleryImages.map((src, index) => (
+            {galleryImages.slice(0, 9).map((src, index) => (
               <button key={index} type="button" className="gallery-thumb" onClick={() => openModal(index)}>
                 <Image src={src} alt={`갤러리 사진 ${index + 1}`} fill unoptimized style={{ objectFit: 'cover' }} />
               </button>
@@ -169,6 +233,24 @@ export default function Home() {
           </div>
         </section>
 
+        {/* 공유 버튼 섹션 */}
+        <section className="share-section">
+          <button type="button" className="share-btn kakao-btn" onClick={handleShareKakao}>
+            <span>카카오톡으로 초대장 전하기</span>
+            <svg className="share-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M7 17L17 7M17 7H7M17 7V17" />
+            </svg>
+          </button>
+
+          <button type="button" className="share-btn copy-btn" onClick={handleCopyLink}>
+            <span>초대장 주소 복사하기</span>
+            <svg className="share-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+          </button>
+        </section>
+
         <section className="letter-section">
           <p>저 멀리, 계절의 끝에서 작은 숨결 하나가<br />우리에게 와 도현이라는 이름이 되었습니다.</p>
           <p>작고 따뜻한 손을 잡고 걷는 하루하루가<br />우리에게는 처음 만나는 빛이었습니다.</p>
@@ -179,11 +261,17 @@ export default function Home() {
 
       {/* 전체화면 라이트박스 모달 */}
       {selectedIndex !== null && (
-        <div className="lightbox-overlay" onClick={closeModal}>
+        <div
+          className="lightbox-overlay"
+          onClick={closeModal}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
           <button type="button" className="lightbox-close" onClick={closeModal} aria-label="닫기">
             ✕
           </button>
-          
+
           <button type="button" className="lightbox-arrow left" onClick={prevImage} aria-label="이전 사진">
             ‹
           </button>
