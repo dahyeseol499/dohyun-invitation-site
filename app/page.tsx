@@ -9,6 +9,7 @@ declare global {
     Kakao: any; // 👈 Kakao 타입 추가
   }
 }
+const INVITATION_URL = 'https://dohyun-invitation.vercel.app/';
 
 // 총 13개 이미지 경로 (맨 앞에 / 추가)
 const galleryImages = [
@@ -39,7 +40,7 @@ export default function Home() {
   // 주소 복사 기능 함수
   const handleCopyLink = () => {
     if (typeof window !== 'undefined') {
-      navigator.clipboard.writeText(window.location.href);
+      navigator.clipboard.writeText(INVITATION_URL);
       alert('초대장 주소가 복사되었습니다.');
     }
   };
@@ -252,10 +253,7 @@ export default function Home() {
         </section>
 
         <section className="letter-section">
-          <p>저 멀리, 계절의 끝에서 작은 숨결 하나가<br />우리에게 와 도현이라는 이름이 되었습니다.</p>
-          <p>작고 따뜻한 손을 잡고 걷는 하루하루가<br />우리에게는 처음 만나는 빛이었습니다.</p>
-          <p>도현이가 처음 맞는 생일,<br />소중한 분들과 그 기쁨을 나누고 싶습니다.</p>
-          <span className="letter-sign">With love, for Dohyun</span>
+        <p className="letter-sign">With love, for Dohyun</p>
         </section>
       </article>
 

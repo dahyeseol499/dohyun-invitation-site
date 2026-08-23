@@ -240,10 +240,23 @@ img { display: block; }
   stroke-linejoin: round;
 }
 
-.letter-section { padding: 82px 45px 100px; background: var(--mist); color: #26324b; font-size: .75rem; line-height: 1.6; word-break: keep-all; }
-.letter-section p { margin: 0 0 30px; }
-.letter-sign { display: block; margin-top: 48px; color: var(--ink); font-family: "Tirelessly Love You", cursive; font-size: 1.75rem; }
+.letter-section {
+  padding: 80px 28px 100px;
+  background-color: var(--mist); /* 기존 미스트 배경색 유지 */
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
+.letter-sign {
+  margin: 0;
+  font-family: "Tirelessly Love You", cursive; /* 상단에서 사용하는 필기체 서체 */
+  font-size: 36px;
+  color: var(--ink);
+  opacity: 0.85;
+  letter-spacing: 0.02em;
+}
 
 @media (max-width: 370px) { .message-copy, .letter-section { font-size: 15px; } }
 @media (min-width: 501px) { .page-shell { padding: 28px 0; } .invitation { border-radius: 20px; } }

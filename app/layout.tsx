@@ -4,7 +4,11 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: '도현이의 첫 번째 생일',
-  description: '도현이의 첫 번째 생일에 초대합니다.',
+  description: '2026년 9월 5일 토요일 11시 30분 | 아산 가든블룸',
+  icons: {
+    icon: '/favicon.ico', // 👈 다운로드한 파일명이 favicon.ico면 '/favicon.ico'로 변경
+    apple: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
