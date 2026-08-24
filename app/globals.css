@@ -129,68 +129,96 @@ img { display: block; }
   overflow: hidden;
 }
 
-/* 전체화면 라이트박스 모달 스타일 */
 .lightbox-overlay {
   position: fixed;
-  inset: 0;
+  inset: 0;                      /* 100vw/100vh 대신 — 인앱 브라우저에서 정확 */
   z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.88);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.9);
+  overscroll-behavior: contain;  /* 스크롤이 뒤 페이지로 새는 것 차단 */
 }
 
 .lightbox-content {
   position: relative;
-  max-width: 90vw;
-  max-height: 85vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 12px;
+  width: 100%;                   /* 가로 꽉 채움 */
 }
 
-.lightbox-counter {
-  margin-top: 12px;
-  color: #fff;
-  font-size: 14px;
-  opacity: 0.8;
+.lightbox-content img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: calc(100dvh - 72px);
+  object-fit: contain;
+}
+
+.lightbox-close,
+.lightbox-arrow {
+  position: absolute;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  color: #ffffff;
+  cursor: pointer;
 }
 
 .lightbox-close {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 28px;
-  cursor: pointer;
-  z-index: 10000;
-  line-height: 1;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
 }
 
 .lightbox-arrow {
-  position: absolute;
   top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 48px;
-  font-weight: 300;
-  padding: 10px 20px;
-  cursor: pointer;
-  z-index: 10000;
-  user-select: none;
+  translate: 0 -50%;
+  width: 44px;
+  height: 44px;
 }
 
-.lightbox-arrow.left {
-  left: 10px;
+.lightbox-arrow.left  { left: 12px;  right: auto; }
+.lightbox-arrow.right { right: 12px; left: auto; }
+
+.lightbox-arrow svg { width: 24px; height: 24px; }
+.lightbox-close svg { width: 20px; height: 20px; }
+
+.lightbox-counter {
+  margin: 0;
+  color: #ffffff;
+  font-size: 14px;
 }
 
-.lightbox-arrow.right {
-  right: 10px;
+/* 컨트롤 자동 숨김 */
+.lightbox-arrow,
+.lightbox-counter {
+  transition: opacity 260ms ease;
+}
+
+.lightbox-overlay.controls-hidden .lightbox-arrow,
+.lightbox-overlay.controls-hidden .lightbox-counter {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* D-day 카운터 */
+.dday {
+  min-height: 1.4em;
+  margin: 0;              /* gap으로 간격 주니까 margin은 0 */
+  white-space: nowrap;    /* ← D-11이 안 쪼개지도록 */
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-align: center;
 }
 
 /* 공유 섹션 스타일 */
@@ -247,6 +275,9 @@ img { display: block; }
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
 }
 
 .letter-sign {

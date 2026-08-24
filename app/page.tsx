@@ -1,17 +1,17 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
 
 declare global {
   interface Window {
     naver: any;
-    Kakao: any; // 👈 Kakao 타입 추가
+    Kakao: any;
   }
 }
+
 const INVITATION_URL = 'https://dohyun-invitation.vercel.app/';
 
-// 총 13개 이미지 경로 (맨 앞에 / 추가)
 const galleryImages = [
   '/gallery/Dohyun-1.jpeg',
   '/gallery/Dohyun-2.jpeg',
@@ -28,16 +28,64 @@ const galleryImages = [
   '/gallery/Dohyun-13.jpeg',
 ];
 
+const MIN_SWIPE_DISTANCE = 50;
+const CONTROLS_HIDE_DELAY = 2500;
+
+const PARTY = { year: 2026, month: 9, day: 5 };
+
+function getKstToday() {
+  const todayStr = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Seoul',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date());
+
+  const [y, m, d] = todayStr.split('-').map(Number);
+  return Date.UTC(y, m - 1, d);
+}
+
+function daysTo({ year, month, day }: { year: number; month: number; day: number }) {
+  return Math.round((Date.UTC(year, month - 1, day) - getKstToday()) / 86400000);
+}
+
+function DayCounter() {
+  const [label, setLabel] = useState<string | null>(null);
+
+  useEffect(() => {
+    const toParty = daysTo(PARTY);
+
+    if (toParty > 0) {
+      setLabel(`도현이 돌잔치까지 D-${toParty}`);
+    } else if (toParty === 0) {
+      setLabel('오늘은 도현이 돌잔치 날이에요');
+    } else {
+      setLabel('함께해 주셔서 감사했습니다');
+    }
+  }, []);
+
+  if (label === null) return null;
+
+  return <p className="dday">{label}</p>;
+}
+
 export default function Home() {
   const mapElement = useRef<HTMLDivElement>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-
-  // 스와이프 터치 위치 저장을 위한 State
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [controlsVisible, setControlsVisible] = useState(true);
 
-  // 주소 복사 기능 함수
+  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isLightboxOpen = selectedIndex !== null;
+
+  const showControls = useCallback(() => {
+    setControlsVisible(true);
+    if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+    hideTimerRef.current = setTimeout(() => setControlsVisible(false), CONTROLS_HIDE_DELAY);
+  }, []);
+
   const handleCopyLink = () => {
     if (typeof window !== 'undefined') {
       navigator.clipboard.writeText(INVITATION_URL);
@@ -45,7 +93,6 @@ export default function Home() {
     }
   };
 
-  // 카카오톡 공유 기능 함수
   const KAKAO_JAVASCRIPT_KEY = '967fd25acd99fdd3bded0bef01106fc0';
   const KAKAO_TEMPLATE_ID = 136469;
 
@@ -59,9 +106,7 @@ export default function Home() {
         Kakao.init(KAKAO_JAVASCRIPT_KEY);
       }
 
-      Kakao.Share.sendCustom({
-        templateId: KAKAO_TEMPLATE_ID,
-      });
+      Kakao.Share.sendCustom({ templateId: KAKAO_TEMPLATE_ID });
     }
   };
 
@@ -81,15 +126,13 @@ export default function Home() {
 
     const location = new window.naver.maps.LatLng(36.9158102, 127.0285499);
 
-    const mapOptions = {
+    const map = new window.naver.maps.Map(mapElement.current, {
       center: location,
       zoom: 16,
       zoomControl: false,
       scaleControl: false,
       mapDataControl: false,
-    };
-
-    const map = new window.naver.maps.Map(mapElement.current, mapOptions);
+    });
 
     const marker = new window.naver.maps.Marker({
       position: location,
@@ -105,28 +148,66 @@ export default function Home() {
     window.naver.maps.Event.addListener(map, 'click', openNaverMap);
   }, [mapLoaded]);
 
-  // 갤러리 모달 제어
+  useEffect(() => {
+    if (!isLightboxOpen) return;
+
+    const scrollY = window.scrollY;
+    const body = document.body;
+
+    body.style.position = 'fixed';
+    body.style.top = `-${scrollY}px`;
+    body.style.left = '0';
+    body.style.right = '0';
+    body.style.width = '100%';
+    body.style.overflow = 'hidden';
+
+    return () => {
+      body.style.position = '';
+      body.style.top = '';
+      body.style.left = '';
+      body.style.right = '';
+      body.style.width = '';
+      body.style.overflow = '';
+
+      const html = document.documentElement;
+      const prev = html.style.scrollBehavior;
+      html.style.scrollBehavior = 'auto';
+      window.scrollTo(0, scrollY);
+      html.style.scrollBehavior = prev;
+    };
+  }, [isLightboxOpen]);
+
+  useEffect(() => {
+    if (!isLightboxOpen) return;
+    showControls();
+
+    return () => {
+      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+      setControlsVisible(true);
+    };
+  }, [isLightboxOpen, showControls]);
+
   const openModal = (index: number) => setSelectedIndex(index);
   const closeModal = () => setSelectedIndex(null);
 
   const prevImage = (e?: React.MouseEvent) => {
     e?.stopPropagation();
-    if (selectedIndex !== null) {
-      setSelectedIndex((prev) => (prev === 0 ? galleryImages.length - 1 : (prev as number) - 1));
-    }
+    showControls();
+    setSelectedIndex((prev) =>
+      prev === null ? null : prev === 0 ? galleryImages.length - 1 : prev - 1,
+    );
   };
 
   const nextImage = (e?: React.MouseEvent) => {
     e?.stopPropagation();
-    if (selectedIndex !== null) {
-      setSelectedIndex((prev) => (prev === galleryImages.length - 1 ? 0 : (prev as number) + 1));
-    }
+    showControls();
+    setSelectedIndex((prev) =>
+      prev === null ? null : prev === galleryImages.length - 1 ? 0 : prev + 1,
+    );
   };
 
-  // 모바일 스와이프 감지 로직 (50px 이상 이동 시 동작)
-  const minSwipeDistance = 50;
-
   const onTouchStart = (e: React.TouchEvent) => {
+    showControls();
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
   };
@@ -136,14 +217,13 @@ export default function Home() {
   };
 
   const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
+    if (touchStart === null || touchEnd === null) return;
 
-    if (isLeftSwipe) {
+    const distance = touchStart - touchEnd;
+
+    if (distance > MIN_SWIPE_DISTANCE) {
       nextImage();
-    } else if (isRightSwipe) {
+    } else if (distance < -MIN_SWIPE_DISTANCE) {
       prevImage();
     }
   };
@@ -184,12 +264,11 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 갤러리 섹션: 썸네일은 상위 9개만 표시 */}
         <section className="gallery-section">
           <h2>갤러리</h2>
           <div className="gallery-grid">
             {galleryImages.slice(0, 9).map((src, index) => (
-              <button key={index} type="button" className="gallery-thumb" onClick={() => openModal(index)}>
+              <button key={src} type="button" className="gallery-thumb" onClick={() => openModal(index)}>
                 <Image src={src} alt={`갤러리 사진 ${index + 1}`} fill unoptimized style={{ objectFit: 'cover' }} />
               </button>
             ))}
@@ -205,36 +284,20 @@ export default function Home() {
           <div ref={mapElement} className="naver-map"></div>
 
           <div className="map-action-bar">
-            <a
-              href="https://map.naver.com/p/search/아산%20가든블룸"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="map-action-link"
-            >
+            <a href="https://map.naver.com/p/search/아산%20가든블룸" target="_blank" rel="noopener noreferrer" className="map-action-link">
               네이버지도
             </a>
             <span className="map-action-divider" aria-hidden="true">|</span>
-            <a
-              href="https://map.kakao.com/?q=아산 가든블룸"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="map-action-link"
-            >
+            <a href="https://map.kakao.com/?q=아산 가든블룸" target="_blank" rel="noopener noreferrer" className="map-action-link">
               카카오맵
             </a>
             <span className="map-action-divider" aria-hidden="true">|</span>
-            <a
-              href="https://tmap.co.kr/tmap2/mobile/route.jsp?name=아산+가든블룸&lat=36.9158102&lon=127.0285499"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="map-action-link"
-            >
+            <a href="https://tmap.co.kr/tmap2/mobile/route.jsp?name=아산+가든블룸&lat=36.9158102&lon=127.0285499" target="_blank" rel="noopener noreferrer" className="map-action-link">
               티맵
             </a>
           </div>
         </section>
 
-        {/* 공유 버튼 섹션 */}
         <section className="share-section">
           <button type="button" className="share-btn kakao-btn" onClick={handleShareKakao}>
             <span>카카오톡으로 초대장 전하기</span>
@@ -253,35 +316,45 @@ export default function Home() {
         </section>
 
         <section className="letter-section">
-        <p className="letter-sign">With love, for Dohyun</p>
+          <DayCounter />
+          <p className="letter-sign">With love, for Dohyun</p>
         </section>
       </article>
 
-      {/* 전체화면 라이트박스 모달 */}
       {selectedIndex !== null && (
         <div
-          className="lightbox-overlay"
+          className={`lightbox-overlay${controlsVisible ? '' : ' controls-hidden'}`}
           onClick={closeModal}
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
         >
           <button type="button" className="lightbox-close" onClick={closeModal} aria-label="닫기">
-            ✕
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
+              <path d="M6 6 L18 18 M18 6 L6 18" />
+            </svg>
           </button>
 
           <button type="button" className="lightbox-arrow left" onClick={prevImage} aria-label="이전 사진">
-            ‹
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M15 4 L7 12 L15 20" />
+            </svg>
           </button>
 
-          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="lightbox-content"
+            onClick={(e) => {
+              e.stopPropagation();
+              showControls();
+            }}
+          >
             <Image
               src={galleryImages[selectedIndex]}
               alt={`도현이 사진 ${selectedIndex + 1}`}
               width={1000}
               height={1000}
               unoptimized
-              style={{ width: '100%', height: 'auto', maxHeight: '80vh', objectFit: 'contain' }}
+              sizes="100vw"
             />
             <div className="lightbox-counter">
               {selectedIndex + 1} / {galleryImages.length}
@@ -289,7 +362,9 @@ export default function Home() {
           </div>
 
           <button type="button" className="lightbox-arrow right" onClick={nextImage} aria-label="다음 사진">
-            ›
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M9 4 L17 12 L9 20" />
+            </svg>
           </button>
         </div>
       )}
